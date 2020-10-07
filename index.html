@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang='kr'>
+    <meta charset='utf-8' />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.js'></script>
+    <script src="jquery.js" ></script>
+
+
+    <script>
+        function data_import() {
+            var link_url = 'http://localhost:3000/calendar?year=2020&month=08&day=15';
+            var url_a = 'http://localhost:3000/calendar?';
+
+            $.ajax({
+                url: link_url,
+                method: "GET",
+                dataType: JSON
+            })
+            .done(function(json) {
+                console.log("불러옴");
+            })
+            .fail(function() {
+                console.log("실패함");
+            })
+            .always(function() {
+               console.log("ALWAYZ");
+            });
+        }
+
+        var im = "no";
+        var dat;
+        let zero = "";
+        var opened = "false";
+        var image_check_fist = 0;
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                timeZone : 'local',
+                locale: 'ko',
+                fixedWeekCount: false,
+                selectable: true,
+
+
+                // unselectAuto: true,
+
+                dateClick: function(info) {
+
+                    var el = document.getElementsByClassName("choice_image");
+                    dat = info.dateStr;
+                    console.log("DAT : " + dat);
+                    console.log(info);
+
+
+
+
+                    function emoticon_insert_clean() {
+                        zero = "default";
+                        el[0].style.display = "none";
+                        //info.dayEl.style.backgroundColor = '';
+                        console.log("bg1 : " + info.bgColor);
+                        if(info.dayEl.bgColor == '') {
+                            info.dayEl.bgColor = 'red';
+                        } else {
+                            info.dayEl.bgColor = '';
+                        }
+                        console.log("들어가는거 맞지요?");
+                        console.log("bg2 : " + info.bgColor);
+                        $('.emoticon_happy').unbind();
+                        $('.emoticon_love').unbind();
+                        $('.emoticon_lovelyz').unbind();
+                    }
+                    info.dayEl.bgColor = 'red';
+
+                    if(info.dayEl.style.backgroundSize == 0 || info.dayEl.style.backgroundSize == "0%") {
+                        el[0].style.display = "block";
+                        $('.emoticon_happy').click(function() {
+                            console.log("happy : 몇번 들어오니?");
+                            //window.open("/emotion_calendar/emotion.html", "", "width=400px, height=400px");
+                            let ka = window.open(`/add_emoticon?code=1&date=${dat}`,'happy','width=,height=');
+                            if(opened == "false") {
+                                opened = "true";
+                                ka.onload = function() {
+                                    console.log("opened : " + opened);
+                                    ka.close();
+                                    // emoticon_insert_clean();
+                                };
+                                opened = "false";
+                                // var link = document.getElementById("emoticon_1_link");
+                                // link.setAttribute("href", `/add_emoticon?code=1&date=${dat}`);
+                                zero = "happy";
+                                image_processing("happy");
+                            }
+                        });
+                        $('.emoticon_love').click(function() {
+                            console.log("love : 몇번 들어오니?");
+                            let ka = window.open(`/add_emoticon?code=2&date=${dat}`,'love','width=,height=');
+                            if(opened == "false") {
+                                opened ="true"
+                                ka.onload = function () {
+                                    console.log("opened : " + opened);
+                                    ka.close();
+                                    // emoticon_insert_clean();
+                                };
+                                info.dayEl.style.backgroundImage = "url('love_emoticon.png')";
+                                opened = "false";
+                                // var link = document.getElementById("emoticon_1_link");
+                                // link.setAttribute("href", `/add_emoticon?code=1&date=${dat}`);
+                                zero = "love";
+                                image_processing("love");
+                            }
+                        });
+                        $('.emoticon_lovelyz').click(function() {
+                            console.log("lovelyz 몇번 들어오니?")
+                            let ka = window.open(`/add_emoticon?code=3&date=${dat}`,'lovelyz','width=,height=');
+                            if(opened == "false") {
+                                opened = "true";
+                                ka.onload = function() {
+                                    console.log("opened : " + opened);
+
+                                    ka.close();
+                                    // emoticon_insert_clean();
+                                };
+                                opened = "false";
+                                zero = "lovelyz";
+                                image_processing("lovelyz");
+                            }
+                        });
+                        $('.all_delete').click(function() {
+                            let ka = window.open('/all_delete','all_delete','width=,height=');
+                            if(opened == "false") {
+                                opened = "true";
+                                ka.onload = function() {
+                                    console.log("opened : " + opened);
+
+                                    ka.close();
+                                    window.location.reload();
+                                }
+                                opened = "false";
+
+                            }
+                        });
+                        function image_processing(check) {
+                            if(check == "happy") {
+                                info.dayEl.style.backgroundImage = "url('happy_emoticon.gif')";        // 포지셔닝 해서 이모티콘 모아둔 거에서 특정 부분만 사용할 수 있게 개발을 해봅시다. 과거에 디마에서 썻던 방식
+                                info.dayEl.style.backgroundSize = "97%";
+                                emoticon_insert_clean();
+                                //zero = "default";
+                            } else if(check == "love") {
+                                info.dayEl.style.backgroundImage = "url('love_emoticon.png')";        // 포지셔닝 해서 이모티콘 모아둔 거에서 특정 부분만 사용할 수 있게 개발을 해봅시다. 과거에 디마에서 썻던 방식
+                                info.dayEl.style.backgroundSize = "97%";
+                                emoticon_insert_clean();
+                                //zero = "default";
+                            } else if(check == "lovelyz") {
+                                info.dayEl.style.backgroundImage = "url('img.jpg')";        // 포지셔닝 해서 이모티콘 모아둔 거에서 특정 부분만 사용할 수 있게 개발을 해봅시다. 과거에 디마에서 썻던 방식
+                                info.dayEl.style.backgroundSize = "97%";
+                                emoticon_insert_clean();
+                                //zero = "default";
+                            } else {
+                                el[0].style.display = "block";
+                            }
+                        }
+                    } else {
+                        info.dayEl.style.backgroundSize = "0%";
+                        info.dayEl.style.backgroundImage = "url('');"
+                        info.dayEl.bgColor = "";
+                    }
+                    // console.log("3"+zero);
+                    // el[0].style.display="block";
+                    // el[0].style.top = 0 + "px";
+                    // el[0].style.left = 0 + "px";
+
+                    // el[0].style.top = info.jsEvent.pageY + "px";
+                    // el[0].style.left = info.jsEvent.pageX + "px";
+
+
+                },
+                // select: function(info){
+                //     console.log(info);
+                //     console.log(info.startStr);
+                //     console.log(info.etc);
+                // }
+
+
+                /* 상우형이 짜준 소스
+                dateClick: function(info) {
+                    var el = document.getElementsByClassName("modal");
+                    el[0].style.display="block";
+                    el[0].style.top = info.jsEvent.pageY + "px";
+                    el[0].style.left = info.jsEvent.pageX + "px";
+                 } */
+                // select: function(info) {
+                //     calendar.gotoDate("2020-02-22");
+                //     // console.log(calendar);
+                //     calendar.el.style.backgroundImage = "url('all_delete.jpg')";
+                //     // info.view.style.backgroundSize =  '10%';
+                // },
+                unselect: function() {
+                    console.log("언셀렉트 됬음");
+                    //calendar.gotoDate("2020-01-15");
+
+                    console.log(" ? " + calendar.getDate().toISOString());
+
+                },
+                now: function() {
+                    data_import();
+
+                    var data_date = ["2020-08-10","2020-08-15","2020-08-17","2020-08-11","2002-08-19"];
+                    var month_en = ["Default","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                    var month_nb = ["00","01","02","03","04","05","06","07","08","09","10","11","12"];
+                    var current_month = 9;
+                    var i = 0;
+                    var apply;
+                    var k;
+
+
+                    $(`.fc-day[data-date^="2020-06-15"]`).css({"background":"url('all_delete.jpg')"});
+
+                    //$(`.fc-daygrid-day-frame`).css({"background":"url('all_delete.jpg')"});
+                    //$(`.fc-day[data-date^="2020-08-10"], .fc-daygrid-day-frame`).css({"background":"url('all_delete.jpg')"});
+                    // $(`.fc-day[data-date^="2020-08-19"]`).children(`.fc-daygrid-day-frame`).css({"background":"url('all_delete.jpg')"});
+                    var y = 2020;
+                    //console.log("date : " + y.toISOString());
+                    var date_f = $(".fc-toolbar-title");
+                    var date = date_f.attr('name');
+                    console.log("date : " + date);
+                    var imsi_year = 2020;
+
+                    $.getJSON(`${imsi_year}.json`, function( json_data ) {
+                        //console.log(data);
+                        console.log(json_data.Sep);
+                        // console.log(`json_data.${imsi_month}`);
+                        var im;
+                        var n = json_data.Sep.length;
+                        console.log("length : " + n);
+                        var i = 0;
+                        var code;
+
+                        while(i < n) {
+                            if(current_month == 1) {
+
+                            } else if(current_month == 2) {
+
+                            } else if(current_month == 3) {
+
+                            } else if(current_month == 4) {
+
+                            } else if(current_month == 5) {
+
+                            } else if(current_month == 6) {
+
+                            } else if(current_month == 7) {
+
+                            } else if(current_month == 8) {
+
+                            } else if(current_month == 9) {
+
+                            } else if(current_month == 10) {
+
+                            } else if(current_month == 11) {
+
+                            } else if(current_month == 12) {
+
+                            }
+                            console.log("i : " + i);
+                            console.log("emotion code : "+json_data.Sep[i].emotion_code);
+                            console.log("emotion date : " +json_data.Sep[i].date);
+
+                            if(json_data.Sep[i].emotion_code == "1")
+                                code = "happy_emoticon.gif";
+                            else if(json_data.Sep[i].emotion_code == "2")
+                                code = "love_emoticon.png";
+                            else if(json_data.Sep[i].emotion_code == "3")
+                                code = "img.jpg";
+                            else
+                                code = "all_delete.jpg";
+
+                            console.log(code);
+                            console.log(`["2020-09-${+json_data.Sep[i].date}"]`);
+
+                            // $(`.fc-day[data-date^="2020-08-${+json_data.August[i].date}"]`).css({"background":`url('${code}')`});
+                            if(json_data.Sep[i].date < 10 )
+                                im = `${imsi_year}-${month_nb[current_month]}-0` + json_data.Sep[i].date;
+                            else
+                                im = `${imsi_year}-${month_nb[current_month]}-` + json_data.Sep[i].date;
+
+                            console.log("imsi ::::::::: " + im);
+
+                            $(`.fc-day[data-date^="${im}"]`).children(`.fc-daygrid-day-frame`).css({"background":`url('${code}')`});
+                            $(`.fc-day[data-date^="${im}"]`).children(`.fc-daygrid-day-frame`).css({"backgroundSize": "97%"});
+                            i++;
+                        }
+                    });
+
+
+                }
+            });
+            calendar.render();
+
+
+        });
+    </script>
+    <script src="lib/locales/ko.js"></script>
+
+</head>
+<body>
+<div id='calendar' style="position: relative"></div>
+<div style="width: 100px;height: 100px; position: absolute; display: none; background: pink"  class="modal">
+    <h1>it is test</h1>
+</div>
+<div style="width: 100px; height: 100px; position: absolute; display: none; background: blueviolet" class="test">
+    <h3>TEST</h3>
+</div>
+
+<div style="width: 100px; height: 100px; position: absolute; display: none; background-image: url('img.jpg'); background-size: 100px 100px; background-position: 30px 20px" class="image" >
+    <h3>TEST</h3>
+</div>
+<div style="top: 500px; left: 0px; width: 300px; height: 300px; position: absolute; display: none; background: deeppink; z-index: 5" class="choice_image">
+    <img src="happy_emoticon.gif" width="31%" height="31%" class="emoticon_happy" >
+    <img src="love_emoticon.png"  width="31%" height="31%" class="emoticon_love" >
+    <img src="img.jpg" width="31%" height="31%" class="emoticon_lovelyz" >
+    <img src="all_delete.jpg" width="216px" height="123.6px" class="all_delete" >
+</div>
+</body>
+</html>

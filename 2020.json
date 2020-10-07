@@ -1,0 +1,30 @@
+{
+  "Aug": [
+    {
+      "emotion_code": "2",
+      "date": 20
+    },
+    {
+      "emotion_code": "1",
+      "date": 7
+    },
+    {
+      "emotion_code": "3",
+      "date": 24
+    }
+  ],
+  "Sep" : [
+    {
+      "emotion_code": "3",
+      "date": 2
+    },
+    {
+      "emotion_code": "1",
+      "date": 10
+    },
+    {
+      "emotion_code": "3",
+      "date": 16
+    }
+  ]
+}

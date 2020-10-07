@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘 당신의 감정은?</title>
+</head>
+<body>
+    <img src="happy_emoticon.gif" width="360px" height="360px" onclick="happy()">
+    <img src="love_emoticon.png"  width="216px" height="216px" onclick="love()">
+    <img src="img.jpg" width="960px" height="739px" onclick="lovelyz()">
+
+    <script>
+        function happy() {
+            zero = "happy";
+            window_close();
+        }
+        function love() {
+            zero = "love";
+            window_close()
+        }
+        function lovelyz() {
+            zero = "lovelyz";
+            window_close()
+        }
+
+        function window_close() {
+            alert(zero);
+            window.close();
+        }
+
+    </script>
+</body>
+</html>
